@@ -1,7 +1,6 @@
 import threading as th
 import socket
 import numpy as np
-from functools import reduce
 
 
 class Game:
@@ -14,9 +13,9 @@ class Game:
         self.fields_attacked_player2 = []
 
     def check_result(self):
-        if len(reduce(lambda x, y: x+y, self.ships_player1)) == len(self.fields_attacked_player1):
+        if not self.ships_player1:
             return self.player2, self.player1
-        if len(reduce(lambda x, y: x+y, self.ships_player2)) == len(self.fields_attacked_player2):
+        if not self.ships_player2:
             return self.player1, self.player2
 
         return None, None
@@ -29,7 +28,6 @@ class Game:
             board = self.ships_player1
             fields_attacked = self.fields_attacked_player1
 
-        
         if field not in fields_attacked:
             fields_attacked.append(field)
             if field in board:

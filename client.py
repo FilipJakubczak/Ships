@@ -4,7 +4,7 @@ import json
 import sys
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 12342       # The port used by the server
+PORT = 12341       # The port used by the server
 
 turn = None
 
@@ -38,6 +38,12 @@ def listener(sock):
             if turn == name:
                 attack(sock)
             print('Turn:', msgdata['turn'])
+        elif msgtype == 'verdict':
+            if msgdata['result'] == 'win':
+                print("You win!")
+            elif msgdata['result'] == 'lose':
+                print("You lose!")
+            break
     
     send_msg(sock, {'type': 'disconnect', 'data': None})
 

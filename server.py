@@ -6,7 +6,7 @@ from classes import Player, Game
 
 
 HOST = '127.0.0.1'
-PORT = 12342
+PORT = 12341
 
 playerlist = []
 threads = []
@@ -54,21 +54,20 @@ def process_message(player, msgtype, msgdata):
         
     elif msgtype == 'attack':
         print('Attack!')
-        msgdata = map(lambda x: int(x), msgdata)
+        msgdata = tuple(map(int, msgdata))
         result = game.attack(player, msgdata)
 
         winner, loser = game.check_result()
-        if winner != None and loser != None:
+        if winner is not None and loser is not None:
             msg_winner = {
                 'type': 'verdict', 'data': {'result': 'win'}}
             msg_loser = {
-                'type': 'verdict', 'data': {'result': 'loose'}}
+                'type': 'verdict', 'data': {'result': 'lose'}}
             msg_winner = json.dumps(msg_winner)
             msg_loser = json.dumps(msg_loser)
 
             send_message(msg_winner, winner)
             send_message(msg_loser, loser)
-
         else:
             if player.sock == game.player1.sock:
                 turn = game.player2.name
