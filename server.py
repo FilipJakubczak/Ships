@@ -5,9 +5,6 @@ import sys
 from classes import Player, Game
 
 
-HOST = '127.0.0.1'
-PORT = 12341
-
 playerlist = []
 threads = []
 game = None
@@ -133,8 +130,14 @@ def handle_client(client):
             start_game()
             
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+    host = input('Enter server hostname or IP address (enter nothing for 127.0.0.1): ')
+    if not host:
+        host = '127.0.0.1'
+    port = input('Enter port (enter nothing for 12345): ')
+    if not port:
+        port = 12345
     try:
-        server_socket.bind((HOST, PORT))
+        server_socket.bind((host, port))
         print('Server started...')
     except Exception as e:
         print(e)

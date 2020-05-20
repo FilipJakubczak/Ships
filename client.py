@@ -3,9 +3,6 @@ import threading as thread
 import json
 import sys
 
-HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 12340       # The port used by the server
-
 
 class Client:
     def __init__(self, host, port):
@@ -103,5 +100,11 @@ def get_shot_coord():
     return shot
 
 
-client = Client(HOST, PORT)
+host = input('Enter server hostname or IP address (enter nothing for 127.0.0.1): ')
+if not host:
+    host = '127.0.0.1'
+port = input('Enter port (enter nothing for 12345): ')
+if not port:
+    port = 12345
+client = Client(host, port)
 client.start()
