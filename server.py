@@ -1,3 +1,5 @@
+"""Filip Jakubczak, Łukasz Łapiński"""
+
 import threading as thread
 import socket
 import json
@@ -10,11 +12,13 @@ threads = []
 game = None
 
 def start_game():
+    """Funkcja rozpoczynająca grę."""
     global game
     player1, player2 = playerlist[0], playerlist[1]
     game = Game(player1, player2)
-    game.place_ship(player1)
-    game.place_ship(player2)
+    for i in range(2):
+    	game.place_ship(player1)
+    	game.place_ship(player2)
     game.print_board(player1)
     game.print_board(player2)
     if len(game.ships_player1) != 0 and len(game.ships_player2) != 0:
@@ -34,10 +38,11 @@ def start_game():
             send_message(json_data, game.player2)
 
 def send_message(msg, target):
+    """Funkcja wysyłająca wiadomość w formacie JSON do klienta."""
     target.sock.send(msg.encode('utf-8'))
 
 def process_message(player, msgtype, msgdata):
-
+    """Funkcja przetwarzająca wiadomość JSON od serwera."""
     global playerlist, game
 
     if msgtype == 'connect':
@@ -86,6 +91,7 @@ def process_message(player, msgtype, msgdata):
         print('Invalid message type.')
 
 def client_connect(client, name):
+    """Funkcja łącząca serwer z klientem."""
     player = Player(client, name)
     playerlist.append(player)
     print(player.name, 'has connected.')
@@ -98,6 +104,7 @@ def client_connect(client, name):
     return player
 
 def handle_client(client):
+    """Funkcja nasłuchująca wiadomości od klienta i obsługująca je."""
     while True:
         if isinstance(client, Player):
             try:
@@ -128,7 +135,8 @@ def handle_client(client):
             client = process_message(client, msgtype, msgdata)
         if game is None and len(playerlist) == 2:
             start_game()
-            
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     host = input('Enter server hostname or IP address (enter nothing for 127.0.0.1): ')
     if not host:

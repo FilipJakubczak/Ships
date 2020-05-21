@@ -1,9 +1,12 @@
+"""Filip Jakubczak, Łukasz Łapiński"""
+
 import threading as th
 import socket
 import numpy as np
 
 
 class Game:
+    """Klasa gry obsługująca jej logikę."""
     def __init__(self, player1, player2):
         self.player1 = player1
         self.player2 = player2
@@ -13,14 +16,15 @@ class Game:
         self.fields_attacked_player2 = []
 
     def check_result(self):
+        """Funkcja sprawdzająca, czy ktoś wygrał grę."""
         if not self.ships_player1:
             return self.player2, self.player1
         if not self.ships_player2:
             return self.player1, self.player2
-
         return None, None
 
     def attack(self, attacker, field):
+        """Funkcja dokonująca ataku na dane pole."""
         if attacker == self.player1:
             board = self.ships_player2
             fields_attacked = self.fields_attacked_player2
@@ -39,6 +43,7 @@ class Game:
         return False
 
     def place_ship(self, player, n=1, pos=None):
+        """Funkcja stawiająca statek w losowym miejscu na planszy."""
         if pos == None:
             pos = (np.random.randint(0, 10), np.random.randint(0, 10))
         if player == self.player1:
@@ -47,6 +52,7 @@ class Game:
             self.ships_player2.append(pos)
     
     def print_board(self, player):
+        """Funkcja wypisująca planszę danego gracza na ekran."""
         if player == self.player1:
             ships = self.ships_player1
             name = self.player1.name
@@ -68,6 +74,7 @@ class Game:
             print('\n')
 
 class Player(dict):
+    """Pomocnicza klasa gracza."""
     def __init__(self, sock, name):
         dict.__init__(self, fname=name)
         self.sock = sock

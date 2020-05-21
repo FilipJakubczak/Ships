@@ -1,3 +1,5 @@
+"""Filip Jakubczak, Łukasz Łapiński"""
+
 import socket
 import threading as thread
 import json
@@ -13,7 +15,7 @@ class Client:
         self.turn = None
 
     def start(self):
-        """Try to join the game and play."""
+        """Funkcja dołączająca klienta do gry."""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             self.sock = s
             self.connect()
@@ -24,7 +26,7 @@ class Client:
             listener.join()
 
     def connect(self):
-        """Connect to the server."""
+        """Funkcja łącząca się z serwerem za pomocą gniazda."""
         try:
             self.sock.connect((self.host, self.port))
         except Exception as ex:
@@ -34,17 +36,17 @@ class Client:
         print('Connected to server.')
 
     def set_name(self):
-        """Set player nickname."""
+        """Funkcja ustawiająca nazwę gracza."""
         nick = input('Your nickname: ')
         self.name = nick
 
     def send_msg(self, msg):
-        """Send a message to the server."""
+        """Funkcja wysyłająca wiadomość w formacie JSON do serwera."""
         msg = json.dumps(msg)
         self.sock.send(msg.encode('utf-8'))
 
     def listener(self):
-        """A listener that responds to messages from the server."""
+        """Funkcja nasłuchująca wiadomości od serwera."""
         while not self.game_finished:
             try:
                 data = self.sock.recv(2048)
@@ -59,7 +61,7 @@ class Client:
         self.send_msg({'type': 'disconnect', 'data': None})
 
     def process_msg(self, msg):
-        """Process the message from the server."""
+        """Funkcja przetwarzająca wiadomość JSON od serwera."""
         msgtype, msgdata = msg['type'], msg['data']
         if msgtype == 'playerlist':
             print('Players:', msg['data'])
@@ -82,13 +84,13 @@ class Client:
             self.game_finished = True
 
     def attack(self):
-        """Attack the opponent at given position."""
+        """Funkcja do atakowania planszy przeciwnika."""
         x, y = get_shot_coord().split(' ')
         self.send_msg({'type': 'attack', 'data': (x, y)})
 
 
 def get_shot_coord():
-    """Get shot coordinates from the user."""
+    """Funkcja pomocnicza do pobrania współrzędnych ataku od użytkownika."""
     correct = False
     shot = None
     while not correct:
